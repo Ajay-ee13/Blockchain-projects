@@ -1,40 +1,58 @@
+const { GENESIS_DATA } = require('./config');
+const cryptoHash = require('./crypto-hash');
 
-const {GENESIS_DATA} = require('./config');
-const cryptoHash = require('./crypto-hash')
-class Block{
-    constructor({timestamp, previousHash, hash, data}){
+
+class Block {
+    constructor({ timestamp, previousHash, hash, data, nonce, difficulty }) {
         this.timestamp = timestamp;
         this.previousHash = previousHash;
         this.hash = hash;
         this.data = data;
+        this.nonce = nonce;
+        this.difficulty = difficulty;
     }
 
-    static genesis(){
-        return new this(GENESIS_DATA);
+    static genesis() {
+        return new Block(GENESIS_DATA);
     }
 
-    static mineBlock({previousBlock, data}){
-        const timestamp = Date.now();
+    static mineBlock({ previousBlock, data }) {
+        let hash, timestamp;
         const previousHash = previousBlock.hash;
-        return new this({
+        let { difficulty } = previousBlock;
+
+        let nonce = 0;
+        do {
+            nonce++;
+            timestamp = Date.now();
+            hash = cryptoHash(timestamp, previousHash, hash, data, nonce, difficulty);
+        } while (hash.substring(0, difficulty) !== '0'.repeat(difficulty));
+
+        return new Block({
             timestamp,
             previousHash,
+            hash: cryptoHash(timestamp, previousHash, data, nonce, difficulty),
             data,
-            hash:cryptoHash(timestamp, previousHash, data),
+            nonce,
+            difficulty,
         })
     }
 }
 
-const block1 = new Block({
-    timestamp: "14/01/23", 
-    previousHash: "0xacb",
-    hash: "123", 
-    data: "hdbjfb",
-});
+// const block1 = new Block({
+//     timestamp: "14/01/23", 
+//     previousHash: "0xacb",
+//     hash: "123", 
+//     data: "hdbjfb",
+//     nonce: 0,
+//     difficulty:2,
+// });
 
-const result = Block.mineBlock({
-    previousBlock:block1,
-    data:"hello",
-})
+// const result = Block.mineBlock({
+//     previousBlock:block1,
+//     data:"hello",
+// })
 
-console.log(result);
+// console.log(result);
+
+module.exports = Block;
