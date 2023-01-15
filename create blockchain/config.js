@@ -1,5 +1,5 @@
+const MINING_RATE = 1000;           //1000 ms
 const INITIAL_DIFFICULTY = 2;
-
 const GENESIS_DATA = {
     timestamp: 1,
     previousHash: "0x000",
@@ -9,4 +9,4 @@ const GENESIS_DATA = {
     difficulty: INITIAL_DIFFICULTY,
 }
 
-module.exports = { GENESIS_DATA };
+module.exports = { GENESIS_DATA, MINING_RATE };
