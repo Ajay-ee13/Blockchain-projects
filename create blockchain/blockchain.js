@@ -37,7 +37,7 @@ class BlockChain {
 
             if (hash !== validatedHash)
                 return false;
-            
+
             if (Math.abs(lastDifficulty - difficulty) > 1) return false;
         }
 
@@ -64,7 +64,7 @@ class BlockChain {
 
 
 const newBlockChain = new BlockChain();
-newBlockChain.addBlock({data:"hello World"});
+newBlockChain.addBlock({ data: "hello World" });
 console.log(newBlockChain);
 
 
